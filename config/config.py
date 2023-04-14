@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from environs import Env
 
+
+# Импорт данных из env-файла
 @dataclass
 class TgBot:
     token: str
@@ -16,3 +18,8 @@ def load_config(path: str | None = None) -> Config:
     env.read_env(path)
     return Config(tg_bot=TgBot(token=env('TOKEN')))
 
+
+# Состояние игры
+state: dict[str, bool] = {
+    'in_game': False
+}
