@@ -1,8 +1,8 @@
 from aiogram import Router, types
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import KeyboardButton, ReplyKeyboardRemove
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-from aiogram.filters import BaseFilter, Text, Command
-from config.config import user_move, bot_move, likes_count
+from aiogram.filters import Text, Command
+from config.config import user_move, bot_move, likes_count, state
 import random
 
 
@@ -25,8 +25,7 @@ def pick_random() -> str:
 
 @router.message(Command(commands='play'))
 async def play(msg: types.Message):
-    await msg.answer(text='Game started! Make your move.', reply_markup=kb_builder.as_markup(resize_keyboard=True,
-                                                                              one_time_keyboard=True))
+    await msg.answer(text='Game started! Make your move.', reply_markup=kb_builder.as_markup(resize_keyboard=True))
     if msg.from_user.id not in likes_count:
         likes_count[msg.from_user.id] = 0
     bot_move[1] = pick_random()
@@ -35,30 +34,39 @@ async def play(msg: types.Message):
 
 @router.message(Text(text=sc))
 async def scissors(msg: types.Message):
-    await msg.reply('So let it be!', reply_markup=ReplyKeyboardRemove())
+    state['attempts_total'] += 1
+    await msg.reply('So let it be!')
     likes_count[msg.from_user.id] += 1
     if msg.from_user.id not in user_move:
         user_move[msg.from_user.id] = {}
     user_move[msg.from_user.id][likes_count[msg.from_user.id]] = sc
+    if state['attempts_total'] == 3:
+        await msg.reply('Game is finished! Try again!', reply_markup=ReplyKeyboardRemove())
     print(user_move)
 
 
 @router.message(Text(text=rock))
 async def scissors(msg: types.Message):
-    await msg.reply('So let it be!', reply_markup=ReplyKeyboardRemove())
+    state['attempts_total'] += 1
+    await msg.reply('So let it be!')
     likes_count[msg.from_user.id] += 1
     if msg.from_user.id not in user_move:
         user_move[msg.from_user.id] = {}
     user_move[msg.from_user.id][likes_count[msg.from_user.id]] = rock
+    if state['attempts_total'] == 3:
+        await msg.reply('Game is finished! Try again!', reply_markup=ReplyKeyboardRemove())
     print(user_move)
 
 
 @router.message(Text(text=paper))
 async def scissors(msg: types.Message):
-    await msg.reply('So let it be!', reply_markup=ReplyKeyboardRemove())
+    state['attempts_total'] += 1
+    await msg.reply('So let it be!')
     likes_count[msg.from_user.id] += 1
     if msg.from_user.id not in user_move:
         user_move[msg.from_user.id] = {}
     user_move[msg.from_user.id][likes_count[msg.from_user.id]] = paper
+    if state['attempts_total'] == 3:
+        await msg.reply('Game is finished! Try again!', reply_markup=ReplyKeyboardRemove())
     print(user_move)
 
