@@ -23,3 +23,8 @@ def load_config(path: str | None = None) -> Config:
 state: dict[str, bool] = {
     'in_game': False
 }
+
+user_move: dict = {}
+bot_move: dict = {}
+
+likes_count: dict = {}
