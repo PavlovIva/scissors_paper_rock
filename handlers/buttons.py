@@ -1,3 +1,4 @@
+# Импорт всего необходимого
 from aiogram import Router, types
 from aiogram.types import KeyboardButton, ReplyKeyboardRemove
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
@@ -6,6 +7,7 @@ from config.config import user_move, bot_move, likes_count, state
 import random
 
 
+# Объявление переменных и присвоение им значений
 router = Router()
 kb_builder = ReplyKeyboardBuilder()
 
@@ -19,19 +21,23 @@ button_paper = (KeyboardButton(text=paper))
 kb_builder.row(button_scissors, button_paper, button_rock)
 
 
+# Генерация хода бота
 def pick_random() -> str:
     return random.choice([sc, rock, paper])
 
 
+# Запускает игру
 @router.message(Command(commands='play'))
 async def play(msg: types.Message):
     await msg.answer(text='Game started! Make your move.', reply_markup=kb_builder.as_markup(resize_keyboard=True))
     if msg.from_user.id not in likes_count:
         likes_count[msg.from_user.id] = 0
+    state['attempts_total'] = 0
     bot_move[1] = pick_random()
     print(bot_move)
 
 
+# Реагирует на ход игрока "ножницы"
 @router.message(Text(text=sc))
 async def scissors(msg: types.Message):
     state['attempts_total'] += 1
@@ -45,6 +51,7 @@ async def scissors(msg: types.Message):
     print(user_move)
 
 
+# Реагирует на ход игрока "камень".
 @router.message(Text(text=rock))
 async def scissors(msg: types.Message):
     state['attempts_total'] += 1
@@ -58,6 +65,7 @@ async def scissors(msg: types.Message):
     print(user_move)
 
 
+# Реагирует на ход игрока "бумага"
 @router.message(Text(text=paper))
 async def scissors(msg: types.Message):
     state['attempts_total'] += 1

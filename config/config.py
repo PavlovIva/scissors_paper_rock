@@ -19,9 +19,11 @@ def load_config(path: str | None = None) -> Config:
     return Config(tg_bot=TgBot(token=env('TOKEN')))
 
 
-# Состояние игры
+# Состояние игры и необходимые данные
 state: dict[str, int] = {
-    'attempts_total': 0
+    'attempts_total': 0,
+    'score_user': 0,
+    'score_bot': 0
 }
 
 user_move: dict = {}

@@ -14,11 +14,13 @@ async def start_bot(msg: types.Message):
     state['in_game'] = True
 
 
+# Реакция на комманду /help
 @router.message(Command(commands='help'))
 async def help_user(msg: types.Message):
     await msg.reply(HELP)
 
 
+# Обработка неправильных сообщений.
 @router.message()
 async def errors(msg: types.Message):
     await msg.reply('Я ограниченный в возможностях бот, понимаю только команды.')

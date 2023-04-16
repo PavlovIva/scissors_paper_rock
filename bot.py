@@ -1,3 +1,4 @@
+# Импорт всего необходимого
 import asyncio
 from aiogram import Bot, Dispatcher
 from config.config import load_config, Config
