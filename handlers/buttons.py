@@ -25,80 +25,79 @@ kb_builder.row(button_scissors, button_paper, button_rock)
 @router.message(Command(commands='play'))
 async def play(msg: types.Message):
     await msg.answer(text='Game started! Make your move.', reply_markup=kb_builder.as_markup(resize_keyboard=True))
-    state['attempts_total'] = 0
-    state['score_user'] = 0
-    state['score_bot'] = 0
+    if msg.from_user.id not in state:
+        state[msg.from_user.id] = {}
+    state[msg.from_user.id]['attempts_total'] = 0
+    state[msg.from_user.id]['score_user'] = 0
+    state[msg.from_user.id]['score_bot'] = 0
 
 
 # Реагирует на ход игрока "ножницы"
 @router.message(Text(text=sc))
 async def scissors(msg: types.Message):
-    state['attempts_total'] += 1
-    bot_move = random.choice([sc, paper, rock])
-    if bot_move == rock:
+    state[msg.from_user.id]['attempts_total'] += 1
+    state[msg.from_user.id]['bot_move'] = random.choice([sc, paper, rock])
+    if state[msg.from_user.id]['bot_move'] == rock:
         await msg.reply('One point to me!')
-        state['score_bot'] += 1
-    elif bot_move == paper:
+        state[msg.from_user.id]['score_bot'] += 1
+    elif state[msg.from_user.id]['bot_move'] == paper:
         await msg.reply('One point to you!')
-        state['score_user'] += 1
+        state[msg.from_user.id]['score_user'] += 1
     else:
         await msg.reply('Draw(')
-    if state['attempts_total'] >= 3:
-        if state['score_user'] > state['score_bot']:
+    if state[msg.from_user.id]['attempts_total'] >= 3:
+        if state[msg.from_user.id]['score_user'] > state[msg.from_user.id]['score_bot']:
             await msg.reply('You win!', reply_markup=ReplyKeyboardRemove())
-        elif state['score_bot'] > state['score_user']:
+        elif state[msg.from_user.id]['score_bot'] > state[msg.from_user.id]['score_user']:
             await msg.reply('You lost(', reply_markup=ReplyKeyboardRemove())
         else:
             await msg.reply('Draw(', reply_markup=ReplyKeyboardRemove())
-    print(bot_move)
     print(state)
 
 
 # Реагирует на ход игрока "камень".
 @router.message(Text(text=rock))
 async def scissors(msg: types.Message):
-    bot_move = random.choice([sc, paper, rock])
-    state['attempts_total'] += 1
-    if bot_move == rock:
+    state[msg.from_user.id]['bot_move'] = random.choice([sc, paper, rock])
+    state[msg.from_user.id]['attempts_total'] += 1
+    if state[msg.from_user.id]['bot_move'] == rock:
         await msg.reply('Draw(')
-    elif bot_move == paper:
+    elif state[msg.from_user.id]['bot_move'] == paper:
         await msg.reply('One point to me!')
-        state['score_bot'] += 1
+        state[msg.from_user.id]['score_bot'] += 1
     else:
         await msg.reply('One point to you!')
-        state['score_user'] += 1
-    if state['attempts_total'] >= 3:
-        if state['score_user'] > state['score_bot']:
+        state[msg.from_user.id]['score_user'] += 1
+    if state[msg.from_user.id]['attempts_total'] >= 3:
+        if state[msg.from_user.id]['score_user'] > state[msg.from_user.id]['score_bot']:
             await msg.reply('You win!', reply_markup=ReplyKeyboardRemove())
-        elif state['score_bot'] > state['score_user']:
+        elif state[msg.from_user.id]['score_bot'] > state[msg.from_user.id]['score_user']:
             await msg.reply('You lost(', reply_markup=ReplyKeyboardRemove())
         else:
             await msg.reply('Draw(', reply_markup=ReplyKeyboardRemove())
-    print(bot_move)
     print(state)
 
 
 # Реагирует на ход игрока "бумага"
 @router.message(Text(text=paper))
 async def scissors(msg: types.Message):
-    bot_move = random.choice([sc, paper, rock])
-    state['attempts_total'] += 1
-    if bot_move == rock:
+    state[msg.from_user.id]['bot_move'] = random.choice([sc, paper, rock])
+    state[msg.from_user.id]['attempts_total'] += 1
+    if state[msg.from_user.id]['bot_move'] == rock:
         await msg.reply('One point to you!')
-        state['score_user'] += 1
-    elif bot_move == paper:
+        state[msg.from_user.id]['score_user'] += 1
+    elif state[msg.from_user.id]['bot_move'] == paper:
         await msg.reply('Draw(')
     else:
         await msg.reply('One point to me!')
-        state['score_bot'] += 1
-    if state['attempts_total'] >= 3:
-        if state['score_user'] > state['score_bot']:
+        state[msg.from_user.id]['score_bot'] += 1
+    if state[msg.from_user.id]['attempts_total'] >= 3:
+        if state[msg.from_user.id]['score_user'] > state[msg.from_user.id]['score_bot']:
             await msg.reply('You win!', reply_markup=ReplyKeyboardRemove())
-        elif state['score_bot'] > state['score_user']:
+        elif state[msg.from_user.id]['score_bot'] > state[msg.from_user.id]['score_user']:
             await msg.reply('You lost(', reply_markup=ReplyKeyboardRemove())
         else:
             await msg.reply('Draw(', reply_markup=ReplyKeyboardRemove())
-    print(bot_move)
     print(state)
 
 

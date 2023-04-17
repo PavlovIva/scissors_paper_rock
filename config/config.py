@@ -20,10 +20,7 @@ def load_config(path: str | None = None) -> Config:
 
 
 # Состояние игры и необходимые данные
-state: dict[str, int] = {
-    'attempts_total': 0,
-    'score_user': 0,
-    'score_bot': 0
+state: dict = {
 }
 user_move: dict = {}
 bot_move: dict = {}
