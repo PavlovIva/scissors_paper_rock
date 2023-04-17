@@ -25,8 +25,7 @@ state: dict[str, int] = {
     'score_user': 0,
     'score_bot': 0
 }
-
 user_move: dict = {}
 bot_move: dict = {}
-
 likes_count: dict = {}
+
